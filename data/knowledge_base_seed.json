@@ -1,0 +1,17 @@
+{
+  "description": "Example schema for learned incident patterns. The dashboard maintains the live version in browser localStorage.",
+  "entries": {
+    "cpu|linux": {
+      "category": "cpu",
+      "os": "linux",
+      "preferred_team": "linux-platform",
+      "recommended_resolution": "Identified noisy process and reduced CPU pressure using safe throttling action.",
+      "count": 1,
+      "positive_feedback": 0,
+      "negative_feedback": 0,
+      "avg_resolution_minutes": 24,
+      "confidence": 0.63,
+      "last_incident": "INC-1001"
+    }
+  }
+}

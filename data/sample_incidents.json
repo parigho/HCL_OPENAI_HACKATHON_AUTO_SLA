@@ -1,0 +1,42 @@
+[
+  {
+    "id": "INC-1001",
+    "created_at": "2026-06-03T09:15:00+05:30",
+    "vm_id": "vm-payroll-01",
+    "severity": "high",
+    "title": "CPU usage above 95 percent",
+    "description": "Payroll VM CPU has been above 95 percent for 20 minutes. Users report slow login."
+  },
+  {
+    "id": "INC-1002",
+    "created_at": "2026-06-05T12:40:00+05:30",
+    "vm_id": "vm-crm-02",
+    "severity": "medium",
+    "title": "Disk utilization warning",
+    "description": "C drive on CRM VM is 91 percent full. Temporary files appear to be growing quickly."
+  },
+  {
+    "id": "INC-1003",
+    "created_at": "2026-06-10T02:10:00+05:30",
+    "vm_id": "vm-db-01",
+    "severity": "critical",
+    "title": "Database service down",
+    "description": "Customer database VM is reachable, but database service is stopped. Restart may affect active transactions."
+  },
+  {
+    "id": "INC-1004",
+    "created_at": "2026-06-11T18:35:00+05:30",
+    "vm_id": "vm-web-03",
+    "severity": "low",
+    "title": "Memory pressure alert",
+    "description": "Memory usage crossed 88 percent. Application remains healthy."
+  },
+  {
+    "id": "INC-1005",
+    "created_at": "2026-06-12T08:05:00+05:30",
+    "vm_id": "vm-web-03",
+    "severity": "high",
+    "title": "Website VM unreachable",
+    "description": "Monitoring cannot reach vm-web-03 over network. Ping and HTTP checks failed."
+  }
+]

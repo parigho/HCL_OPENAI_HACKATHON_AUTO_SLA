@@ -1,0 +1,67 @@
+{
+  "sla_minutes": {
+    "critical": 30,
+    "high": 120,
+    "medium": 480,
+    "low": 1440
+  },
+  "priority_response_minutes": {
+    "P1": 5,
+    "P2": 10,
+    "P3": 15,
+    "P4": 20
+  },
+  "teams": [
+    {
+      "name": "linux-platform",
+      "skills": ["linux", "cpu", "memory", "disk", "service"],
+      "max_active": 5
+    },
+    {
+      "name": "windows-platform",
+      "skills": ["windows", "cpu", "memory", "disk", "service"],
+      "max_active": 4
+    },
+    {
+      "name": "network-ops",
+      "skills": ["network", "connectivity", "dns"],
+      "max_active": 3
+    },
+    {
+      "name": "database-ops",
+      "skills": ["database", "storage", "memory"],
+      "max_active": 3
+    }
+  ],
+  "vms": [
+    {
+      "id": "vm-payroll-01",
+      "os": "linux",
+      "owner_team": "linux-platform",
+      "business_service": "Payroll",
+      "criticality": "high"
+    },
+    {
+      "id": "vm-crm-02",
+      "os": "windows",
+      "owner_team": "windows-platform",
+      "business_service": "CRM",
+      "criticality": "medium"
+    },
+    {
+      "id": "vm-db-01",
+      "os": "linux",
+      "owner_team": "database-ops",
+      "business_service": "Customer Database",
+      "criticality": "critical"
+    },
+    {
+      "id": "vm-web-03",
+      "os": "linux",
+      "owner_team": "linux-platform",
+      "business_service": "Website",
+      "criticality": "high"
+    }
+  ],
+  "auto_resolve_risk_limit": "low"
+}

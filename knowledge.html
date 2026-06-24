@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Knowledge Base - Agentic Incident Resolution</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --ink: #1b2420;
+      --muted: #62706a;
+      --line: #d9dfd7;
+      --green: #2f7d59;
+      --amber: #b66a18;
+      --red: #b93631;
+      --blue: #2e6f9e;
+      --shadow: 0 14px 30px rgba(31, 43, 37, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #17231e;
+      color: #f7faf6;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.18;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 6px;
+      color: #adbbb4;
+      font-size: 13px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      min-height: 40px;
+      border-radius: 8px;
+      color: #deebe4;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      text-decoration: none;
+    }
+
+    .nav a.active,
+    .nav a:hover {
+      background: #24362f;
+      color: #ffffff;
+    }
+
+    .nav svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    main {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .panel-header span,
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font: inherit;
+      min-height: 36px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      color: var(--ink);
+      cursor: pointer;
+      padding: 0 12px;
+    }
+
+    .kb-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .kb-item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfa;
+      padding: 12px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .kb-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      font-size: 12px;
+      font-weight: 650;
+      white-space: nowrap;
+    }
+
+    .good { background: #e4f3eb; color: #225f44; }
+    .warn { background: #fdebd5; color: var(--amber); }
+    .bad { background: #fbe7e5; color: var(--red); }
+
+    code {
+      display: block;
+      color: var(--muted);
+      white-space: pre-wrap;
+      font-size: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 10px;
+    }
+
+    @media (max-width: 900px) {
+      .app { grid-template-columns: 1fr; }
+      .sidebar { flex-direction: row; overflow: auto; }
+      .nav { display: flex; }
+      .nav a { white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Agentic Incident Resolution</h1>
+        <span>Knowledge system</span>
+      </div>
+      <nav class="nav" aria-label="Pages">
+        <a href="dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3v10Z"/><path d="M13 21h8V11h-8v10Z"/><path d="M13 3v6h8V3h-8Z"/><path d="M3 21h8v-6H3v6Z"/></svg>
+          Dashboard
+        </a>
+        <a class="active" href="knowledge.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.5A4.5 4.5 0 0 0 7.5 2H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h3.5A4.5 4.5 0 0 1 12 22Z"/><path d="M12 6.5A4.5 4.5 0 0 1 16.5 2H20a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3.5A4.5 4.5 0 0 0 12 22Z"/></svg>
+          Knowledge
+        </a>
+        <a href="demo-lab.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M9 14h6"/><path d="M10 6 4 20a2 2 0 0 0 1.8 2h12.4a2 2 0 0 0 1.8-2L14 6"/><path d="M6.5 14h11"/></svg>
+          Demo Lab
+        </a>
+      </nav>
+    </aside>
+
+    <main>
+      <section class="topbar">
+        <div>
+          <h2>Knowledge Base</h2>
+          <p>Learned JSON-style incident patterns used by future incident resolution.</p>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <div>
+            <h3>Learned Patterns</h3>
+            <span id="summary">0 entries</span>
+          </div>
+          <div class="button-row">
+            <button id="rebuildKb">Rebuild from incident history</button>
+            <button id="clearKb">Clear learned feedback</button>
+          </div>
+        </div>
+        <div class="panel-body">
+          <div class="kb-list" id="knowledgeList"></div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script>
+    const storageKeys = {
+      incidents: "agenticIncidentDemo.incidents",
+      knowledgeBase: "agenticIncidentDemo.knowledgeBase"
+    };
+
+    const config = {
+      vms: [
+        { id: "vm-payroll-01", os: "linux", owner_team: "linux-platform", business_service: "Payroll" },
+        { id: "vm-crm-02", os: "windows", owner_team: "windows-platform", business_service: "CRM" },
+        { id: "vm-db-01", os: "linux", owner_team: "database-ops", business_service: "Customer Database" },
+        { id: "vm-web-03", os: "linux", owner_team: "linux-platform", business_service: "Website" }
+      ]
+    };
+
+    const vmById = Object.fromEntries(config.vms.map((vm) => [vm.id, vm]));
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function knowledgeKey(incident) {
+      const vm = vmById[incident.vm_id] || {};
+      return `${incident.category}|${vm.os || "unknown"}`;
+    }
+
+    function learnFromIncident(incident, target) {
+      if (!incident.category || !incident.resolution) return;
+      const key = knowledgeKey(incident);
+      const existing = target[key] || {
+        key,
+        category: incident.category,
+        os: (vmById[incident.vm_id] || {}).os || "unknown",
+        preferred_team: incident.assigned_team,
+        recommended_resolution: incident.resolution,
+        count: 0,
+        positive_feedback: 0,
+        negative_feedback: 0,
+        avg_resolution_minutes: 0,
+        confidence: 0.55,
+        last_incident: incident.id
+      };
+
+      existing.count += 1;
+      existing.preferred_team = incident.assigned_team || existing.preferred_team;
+      existing.recommended_resolution = incident.resolution;
+      existing.last_incident = incident.id;
+      if (incident.resolution_minutes !== null && incident.resolution_minutes !== undefined) {
+        const previousTotal = existing.avg_resolution_minutes * Math.max(existing.count - 1, 0);
+        existing.avg_resolution_minutes = Math.round((previousTotal + incident.resolution_minutes) / existing.count);
+      }
+      existing.confidence = Math.min(
+        0.98,
+        0.55 + existing.count * 0.08 + existing.positive_feedback * 0.08 - existing.negative_feedback * 0.12
+      );
+      target[key] = existing;
+    }
+
+    function buildKnowledgeBase(incidents) {
+      const kb = {};
+      incidents.forEach((incident) => learnFromIncident(incident, kb));
+      return kb;
+    }
+
+    function render() {
+      const kb = loadJson(storageKeys.knowledgeBase, {});
+      const entries = Object.values(kb).sort((a, b) => b.confidence - a.confidence);
+      document.getElementById("summary").textContent = `${entries.length} entries`;
+      document.getElementById("knowledgeList").innerHTML = entries.length ? entries.map((entry) => {
+        const className = entry.confidence >= 0.75 ? "good" : entry.confidence >= 0.5 ? "warn" : "bad";
+        return `
+          <div class="kb-item">
+            <div class="kb-top">
+              <strong>${entry.key}</strong>
+              <span class="pill ${className}">${Math.round(entry.confidence * 100)}% confidence</span>
+            </div>
+            <code>{
+  "category": "${entry.category}",
+  "os": "${entry.os}",
+  "preferred_team": "${entry.preferred_team}",
+  "seen": ${entry.count},
+  "avg_resolution_minutes": ${entry.avg_resolution_minutes || 0},
+  "positive_feedback": ${entry.positive_feedback},
+  "negative_feedback": ${entry.negative_feedback},
+  "last_incident": "${entry.last_incident}"
+}</code>
+            <div class="muted">${entry.recommended_resolution}</div>
+          </div>
+        `;
+      }).join("") : `<p class="muted">No learned patterns yet. Use the Demo Lab to generate incidents or rebuild from history.</p>`;
+    }
+
+    document.getElementById("rebuildKb").addEventListener("click", () => {
+      const incidents = loadJson(storageKeys.incidents, []);
+      saveJson(storageKeys.knowledgeBase, buildKnowledgeBase(incidents));
+      render();
+    });
+
+    document.getElementById("clearKb").addEventListener("click", () => {
+      saveJson(storageKeys.knowledgeBase, {});
+      render();
+    });
+
+    render();
+  </script>
+</body>
+</html>

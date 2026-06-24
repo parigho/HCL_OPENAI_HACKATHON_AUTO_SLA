@@ -1,0 +1,613 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Demo Lab - Agentic Incident Resolution</title>
+  <style>
+    :root {
+      --bg: #f6f7f4;
+      --panel: #ffffff;
+      --ink: #1b2420;
+      --muted: #62706a;
+      --line: #d9dfd7;
+      --green: #2f7d59;
+      --amber: #b66a18;
+      --red: #b93631;
+      --blue: #2e6f9e;
+      --violet: #6a5da8;
+      --shadow: 0 14px 30px rgba(31, 43, 37, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Arial, sans-serif;
+    }
+
+    button,
+    select {
+      font: inherit;
+    }
+
+    .app {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 248px minmax(0, 1fr);
+    }
+
+    .sidebar {
+      background: #17231e;
+      color: #f7faf6;
+      padding: 22px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 19px;
+      line-height: 1.18;
+    }
+
+    .brand span {
+      display: block;
+      margin-top: 6px;
+      color: #adbbb4;
+      font-size: 13px;
+    }
+
+    .nav {
+      display: grid;
+      gap: 8px;
+    }
+
+    .nav a {
+      min-height: 40px;
+      border-radius: 8px;
+      color: #deebe4;
+      background: transparent;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 12px;
+      text-decoration: none;
+    }
+
+    .nav a.active,
+    .nav a:hover {
+      background: #24362f;
+      color: #ffffff;
+    }
+
+    .nav svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    main {
+      padding: 22px;
+      display: grid;
+      gap: 18px;
+      align-content: start;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: 26px;
+    }
+
+    p {
+      color: var(--muted);
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel-header {
+      padding: 15px 16px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .panel-header h3 {
+      margin: 0;
+      font-size: 16px;
+    }
+
+    .panel-header span,
+    .muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .panel-body {
+      padding: 16px;
+    }
+
+    .lab-grid {
+      display: grid;
+      grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .form-grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .field {
+      min-height: 38px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--panel);
+      color: var(--ink);
+      padding: 0 12px;
+    }
+
+    .button-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .primary-button,
+    .secondary-button {
+      min-height: 40px;
+      border-radius: 8px;
+      cursor: pointer;
+      padding: 0 14px;
+    }
+
+    .primary-button {
+      border: 0;
+      background: var(--green);
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .secondary-button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .report {
+      white-space: pre-wrap;
+      color: #2b332f;
+      line-height: 1.45;
+      font-size: 14px;
+      min-height: 260px;
+      overflow: auto;
+      background: #fbfcfa;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 14px;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      width: min(360px, calc(100vw - 36px));
+      border-radius: 8px;
+      background: #17231e;
+      color: #fff;
+      box-shadow: 0 18px 40px rgba(31, 43, 37, 0.22);
+      padding: 14px 16px;
+      display: grid;
+      gap: 5px;
+      transform: translateY(120%);
+      opacity: 0;
+      transition: transform 180ms ease, opacity 180ms ease;
+      z-index: 20;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast strong {
+      font-size: 14px;
+    }
+
+    .toast span {
+      color: #c5d2ca;
+      font-size: 13px;
+    }
+
+    @media (max-width: 900px) {
+      .app,
+      .lab-grid { grid-template-columns: 1fr; }
+      .sidebar { flex-direction: row; overflow: auto; }
+      .nav { display: flex; }
+      .nav a { white-space: nowrap; }
+    }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <h1>Agentic Incident Resolution</h1>
+        <span>Demo generator</span>
+      </div>
+      <nav class="nav" aria-label="Pages">
+        <a href="dashboard.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 13h8V3H3v10Z"/><path d="M13 21h8V11h-8v10Z"/><path d="M13 3v6h8V3h-8Z"/><path d="M3 21h8v-6H3v6Z"/></svg>
+          Dashboard
+        </a>
+        <a href="knowledge.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6.5A4.5 4.5 0 0 0 7.5 2H4a1 1 0 0 0-1 1v16a1 1 0 0 0 1 1h3.5A4.5 4.5 0 0 1 12 22Z"/><path d="M12 6.5A4.5 4.5 0 0 1 16.5 2H20a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1h-3.5A4.5 4.5 0 0 0 12 22Z"/></svg>
+          Knowledge
+        </a>
+        <a class="active" href="demo-lab.html">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 2v4"/><path d="M16 2v4"/><path d="M9 14h6"/><path d="M10 6 4 20a2 2 0 0 0 1.8 2h12.4a2 2 0 0 0 1.8-2L14 6"/><path d="M6.5 14h11"/></svg>
+          Demo Lab
+        </a>
+      </nav>
+    </aside>
+
+    <main>
+      <section>
+        <h2>Demo Incident Generator</h2>
+        <p>Create demo incidents that are saved into the shared dashboard data store.</p>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h3>Generate Incident</h3>
+          <span>Each generated incident triggers a toast notification and chime.</span>
+        </div>
+        <div class="panel-body lab-grid">
+          <div class="form-grid">
+            <label>
+              Incident type
+              <select class="field" id="demoType">
+                <option value="cpu">CPU saturation</option>
+                <option value="memory">Memory pressure</option>
+                <option value="disk">Disk full</option>
+                <option value="service">Service down</option>
+                <option value="network">Network unreachable</option>
+              </select>
+            </label>
+            <label>
+              Severity
+              <select class="field" id="demoSeverity">
+                <option value="critical">critical / P1</option>
+                <option value="high">high / P2</option>
+                <option value="medium">medium / P3</option>
+                <option value="low">low / P4</option>
+              </select>
+            </label>
+            <label>
+              Target VM
+              <select class="field" id="demoVm"></select>
+            </label>
+            <div class="button-row">
+              <button class="primary-button" id="generateIncident">Generate incident</button>
+              <button class="secondary-button" id="generateAllIncidents">Generate all types</button>
+            </div>
+            <p class="muted">Open the dashboard after generation to see the new incidents in KPI cards, charts, and the incident queue.</p>
+          </div>
+          <div>
+            <div class="report" id="demoOutput">Generated incidents will appear here.</div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">
+    <strong id="toastTitle">New incident generated</strong>
+    <span id="toastBody">Incident is ready.</span>
+  </div>
+
+  <script>
+    const storageKeys = {
+      incidents: "agenticIncidentDemo.incidents",
+      knowledgeBase: "agenticIncidentDemo.knowledgeBase",
+      sequence: "agenticIncidentDemo.sequence"
+    };
+
+    const config = {
+      priority_response_minutes: { P1: 5, P2: 10, P3: 15, P4: 20 },
+      teams: [
+        { name: "linux-platform", skills: ["linux", "cpu", "memory", "disk", "service"] },
+        { name: "windows-platform", skills: ["windows", "cpu", "memory", "disk", "service"] },
+        { name: "network-ops", skills: ["network", "connectivity", "dns"] },
+        { name: "database-ops", skills: ["database", "storage", "memory"] }
+      ],
+      vms: [
+        { id: "vm-payroll-01", os: "linux", owner_team: "linux-platform", business_service: "Payroll" },
+        { id: "vm-crm-02", os: "windows", owner_team: "windows-platform", business_service: "CRM" },
+        { id: "vm-db-01", os: "linux", owner_team: "database-ops", business_service: "Customer Database" },
+        { id: "vm-web-03", os: "linux", owner_team: "linux-platform", business_service: "Website" }
+      ]
+    };
+
+    const incidentTemplates = {
+      cpu: {
+        title: "CPU usage above 95 percent",
+        description: "CPU saturation detected for 20 minutes. Users report slow response.",
+        resolution: "Identified noisy process and reduced CPU pressure using safe throttling action.",
+        risk: "low",
+        base_minutes: 24
+      },
+      memory: {
+        title: "Memory pressure alert",
+        description: "Memory crossed the threshold and application cache is growing quickly.",
+        resolution: "Cleared application cache and confirmed memory returned below threshold.",
+        risk: "low",
+        base_minutes: 18
+      },
+      disk: {
+        title: "Disk utilization warning",
+        description: "Disk utilization crossed 90 percent and temporary files are growing.",
+        resolution: "Removed temporary files and confirmed free disk space is healthy.",
+        risk: "low",
+        base_minutes: 32
+      },
+      service: {
+        title: "Critical service down",
+        description: "Primary application service is stopped. Restart may affect active users.",
+        resolution: "Escalated for approved service restart during a controlled window.",
+        risk: "medium",
+        base_minutes: 75
+      },
+      network: {
+        title: "VM unreachable",
+        description: "Monitoring cannot reach the VM over ping or HTTP checks.",
+        resolution: "Escalated for network path, route table, and firewall validation.",
+        risk: "medium",
+        base_minutes: 90
+      }
+    };
+
+    const vmById = Object.fromEntries(config.vms.map((vm) => [vm.id, vm]));
+    let incidents = loadJson(storageKeys.incidents, []);
+    let knowledgeBase = loadJson(storageKeys.knowledgeBase, {});
+    let incidentSequence = Number(localStorage.getItem(storageKeys.sequence) || incidents.length + 1005);
+
+    function loadJson(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch {
+        return fallback;
+      }
+    }
+
+    function saveJson(key, value) {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
+
+    function classifyPriority(severity) {
+      return { critical: "P1", high: "P2", medium: "P3", low: "P4" }[severity] || "P4";
+    }
+
+    function knowledgeKey(incident) {
+      const vm = vmById[incident.vm_id] || {};
+      return `${incident.category}|${vm.os || "unknown"}`;
+    }
+
+    function findKnowledgeMatch(incident) {
+      return knowledgeBase[knowledgeKey(incident)] || null;
+    }
+
+    function learnFromIncident(incident) {
+      if (!incident.category || !incident.resolution) return;
+      const key = knowledgeKey(incident);
+      const entry = knowledgeBase[key] || {
+        key,
+        category: incident.category,
+        os: (vmById[incident.vm_id] || {}).os || "unknown",
+        preferred_team: incident.assigned_team,
+        recommended_resolution: incident.resolution,
+        count: 0,
+        positive_feedback: 0,
+        negative_feedback: 0,
+        avg_resolution_minutes: 0,
+        confidence: 0.55,
+        last_incident: incident.id
+      };
+      entry.count += 1;
+      entry.preferred_team = incident.assigned_team || entry.preferred_team;
+      entry.recommended_resolution = incident.resolution;
+      entry.last_incident = incident.id;
+      if (incident.resolution_minutes !== null && incident.resolution_minutes !== undefined) {
+        const previousTotal = entry.avg_resolution_minutes * Math.max(entry.count - 1, 0);
+        entry.avg_resolution_minutes = Math.round((previousTotal + incident.resolution_minutes) / entry.count);
+      }
+      entry.confidence = Math.min(0.98, 0.55 + entry.count * 0.08 + entry.positive_feedback * 0.08 - entry.negative_feedback * 0.12);
+      knowledgeBase[key] = entry;
+    }
+
+    function assignTeam(incident) {
+      const vm = vmById[incident.vm_id] || {};
+      const kbMatch = findKnowledgeMatch(incident);
+      if (kbMatch && kbMatch.confidence >= 0.7 && kbMatch.preferred_team) {
+        return kbMatch.preferred_team;
+      }
+      return config.teams
+        .map((team) => ({
+          name: team.name,
+          score: Number(team.skills.includes(incident.category)) + Number(team.skills.includes(vm.os)) + (vm.owner_team === team.name ? 3 : 0)
+        }))
+        .sort((a, b) => b.score - a.score)[0].name;
+    }
+
+    function estimateResolutionMinutes(category, severity, kbMatch) {
+      if (kbMatch && kbMatch.avg_resolution_minutes) return kbMatch.avg_resolution_minutes;
+      const multiplier = { critical: 0.7, high: 1, medium: 1.2, low: 1.5 }[severity] || 1;
+      return Math.round((incidentTemplates[category]?.base_minutes || 45) * multiplier);
+    }
+
+    function addMinutes(value, minutes) {
+      const date = new Date(value);
+      date.setMinutes(date.getMinutes() + minutes);
+      return date.toISOString();
+    }
+
+    function nextIncidentId() {
+      incidentSequence += 1;
+      localStorage.setItem(storageKeys.sequence, String(incidentSequence));
+      return `INC-${incidentSequence}`;
+    }
+
+    function applyPriorityPolicy(incident) {
+      const threshold = config.priority_response_minutes[incident.priority];
+      if (incident.status === "resolved" && incident.resolution_minutes <= threshold) {
+        incident.priority_status = "within target";
+        incident.escalation_action = "No escalation needed. Incident resolved within priority target.";
+        incident.audit_log.push(`priority timer ok: resolved in ${incident.resolution_minutes}m within ${threshold}m`);
+        return;
+      }
+      if (incident.status === "resolved") {
+        incident.priority_status = "bridge call invited";
+        incident.escalation_action = `Created bridge call invite because ${incident.priority} exceeded ${threshold}m target`;
+        incident.audit_log.push(incident.escalation_action);
+        return;
+      }
+      incident.priority_status = "auto escalated";
+      incident.escalation_action = `Auto-escalated to ${incident.assigned_team} because ${incident.priority} was not resolved within ${threshold}m`;
+      incident.audit_log.push(incident.escalation_action);
+    }
+
+    function createDemoIncident(category, severity, vmId) {
+      const template = incidentTemplates[category];
+      const createdAt = new Date().toISOString();
+      const incident = {
+        id: nextIncidentId(),
+        created_at: createdAt,
+        vm_id: vmId,
+        severity,
+        title: template.title,
+        description: template.description,
+        status: "in_progress",
+        assigned_team: null,
+        category,
+        resolution: null,
+        resolved_at: null,
+        priority: classifyPriority(severity),
+        priority_status: null,
+        resolution_minutes: null,
+        escalation_action: null,
+        escalated: false,
+        audit_log: [`classified category=${category}`, `classified priority=${classifyPriority(severity)}`]
+      };
+      const kbMatch = findKnowledgeMatch(incident);
+      incident.assigned_team = assignTeam(incident);
+      incident.audit_log.push(`assigned team=${incident.assigned_team}`);
+      incident.audit_log.push(kbMatch ? `knowledge match applied: ${kbMatch.key} confidence=${Math.round(kbMatch.confidence * 100)}%` : "knowledge match not found: used default playbook");
+      const canAutoResolve = template.risk === "low" && severity !== "critical";
+      if (canAutoResolve) {
+        incident.status = "resolved";
+        incident.resolution_minutes = estimateResolutionMinutes(category, severity, kbMatch);
+        incident.resolved_at = addMinutes(createdAt, incident.resolution_minutes);
+        incident.resolution = kbMatch?.recommended_resolution || template.resolution;
+        incident.audit_log.push(`remediation executed using ${kbMatch ? "knowledge base" : "default playbook"}`);
+      } else {
+        incident.status = "escalated";
+        incident.escalated = true;
+        incident.resolution = kbMatch?.recommended_resolution || template.resolution;
+        incident.audit_log.push("policy blocked auto-resolution");
+      }
+      applyPriorityPolicy(incident);
+      learnFromIncident(incident);
+      incidents.unshift(incident);
+      saveJson(storageKeys.incidents, incidents);
+      saveJson(storageKeys.knowledgeBase, knowledgeBase);
+      return incident;
+    }
+
+    function playChime() {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const audio = new AudioContext();
+      const gain = audio.createGain();
+      gain.gain.setValueAtTime(0.0001, audio.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.08, audio.currentTime + 0.02);
+      gain.gain.exponentialRampToValueAtTime(0.0001, audio.currentTime + 0.55);
+      gain.connect(audio.destination);
+      [660, 880].forEach((freq, index) => {
+        const oscillator = audio.createOscillator();
+        oscillator.type = "sine";
+        oscillator.frequency.value = freq;
+        oscillator.connect(gain);
+        oscillator.start(audio.currentTime + index * 0.12);
+        oscillator.stop(audio.currentTime + 0.45 + index * 0.12);
+      });
+    }
+
+    function showToast(title, body) {
+      document.getElementById("toastTitle").textContent = title;
+      document.getElementById("toastBody").textContent = body;
+      const toast = document.getElementById("toast");
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 3600);
+      playChime();
+    }
+
+    function renderVmOptions() {
+      document.getElementById("demoVm").innerHTML = config.vms.map((vm) => `
+        <option value="${vm.id}">${vm.id} - ${vm.business_service}</option>
+      `).join("");
+    }
+
+    document.getElementById("generateIncident").addEventListener("click", () => {
+      const incident = createDemoIncident(
+        document.getElementById("demoType").value,
+        document.getElementById("demoSeverity").value,
+        document.getElementById("demoVm").value
+      );
+      document.getElementById("demoOutput").textContent = JSON.stringify({
+        generated: incident.id,
+        category: incident.category,
+        priority: incident.priority,
+        assigned_team: incident.assigned_team,
+        status: incident.status,
+        priority_status: incident.priority_status,
+        resolution_minutes: incident.resolution_minutes,
+        knowledge_used: incident.audit_log.some((event) => event.includes("knowledge match applied"))
+      }, null, 2);
+      showToast("New incident generated", `${incident.id} ${incident.priority} assigned to ${incident.assigned_team}`);
+    });
+
+    document.getElementById("generateAllIncidents").addEventListener("click", () => {
+      const vmId = document.getElementById("demoVm").value;
+      const generated = Object.keys(incidentTemplates).map((category) => {
+        const severity = category === "service" ? "critical" : category === "network" ? "high" : "medium";
+        return createDemoIncident(category, severity, vmId);
+      });
+      document.getElementById("demoOutput").textContent = JSON.stringify(generated.map((incident) => ({
+        id: incident.id,
+        category: incident.category,
+        priority: incident.priority,
+        status: incident.status,
+        priority_status: incident.priority_status,
+        assigned_team: incident.assigned_team
+      })), null, 2);
+      showToast("New incidents generated", `${generated.length} demo incidents added to the dashboard`);
+    });
+
+    renderVmOptions();
+  </script>
+</body>
+</html>
